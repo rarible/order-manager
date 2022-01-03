@@ -1,10 +1,13 @@
 import React, { FC } from 'react';
-import { Button } from 'antd';
 import './App.css';
+import { SdkWalletConnector } from "./connector/component";
+import { connector } from "./connector";
 
 const App: FC = () => (
     <div className="App">
-      <Button type="primary">Button</Button>
+      <SdkWalletConnector connector={connector}>{
+          ({ sdk, address }) => <div>connected: {address}</div>
+      }</SdkWalletConnector>
     </div>
 );
 

@@ -1,20 +1,15 @@
-import { NetworkType as TezosNetwork } from "@airgap/beacon-sdk"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { Ethereum } from "@rarible/ethereum-provider"
 import {
-    Connector,
-    IConnectorStateProvider,
-    ConnectionProvider,
-    MEWConnectionProvider,
-    InjectedWeb3ConnectionProvider,
     AbstractConnectionProvider,
+    ConnectionProvider,
+    Connector,
     EthereumProviderConnectionResult,
+    IConnectorStateProvider,
+    InjectedWeb3ConnectionProvider,
+    MEWConnectionProvider,
     TorusConnectionProvider,
     WalletLinkConnectionProvider,
-    //WalletConnectConnectionProvider,
-    //FortmaticConnectionProvider,
-    //PortisConnectionProvider,
 } from "@rarible/sdk-wallet-connector";
 import { createRaribleSdk, RaribleSdk } from "@rarible/protocol-ethereum-sdk";
 
@@ -26,10 +21,18 @@ const ethereumRpcMap: Record<number, string> = {
     17: "https://node-e2e.rarible.com",
 }
 
-function mapToSdk<O>(provider: AbstractConnectionProvider<O, EthereumProviderConnectionResult>): ConnectionProvider<O, RaribleSdk> {
+type Connection = {
+    sdk: RaribleSdk
+    address: string
+}
+
+function mapToSdk<O>(provider: AbstractConnectionProvider<O, EthereumProviderConnectionResult>): ConnectionProvider<O, Connection> {
     return provider.map(conn => {
         const web3 = new Web3(conn.provider)
-        return createRaribleSdk(new Web3Ethereum({ web3, from: conn.address }), "rinkeby")
+        return {
+            sdk: createRaribleSdk(new Web3Ethereum({ web3, from: conn.address }), "rinkeby"),
+            address: conn.address,
+        }
     })
 }
 
@@ -64,8 +67,6 @@ const walletlink = mapToSdk(new WalletLinkConnectionProvider({
 // }))
 // const fortmatic = mapToSdk(new FortmaticConnectionProvider({ apiKey: "FORTMATIC_API_KEY" }))
 // const portis = mapToSdk(new PortisConnectionProvider({ apiKey: "PORTIS_API_KEY", network: "rinkeby" }))
-
-
 
 const state: IConnectorStateProvider = {
     async getValue(): Promise<string | undefined> {
