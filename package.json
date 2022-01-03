@@ -1,38 +1,12 @@
 {
-  "name": "order-checker",
+  "name": "@rarible/order-checker",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@rarible/protocol-ethereum-sdk": "~0.12.28",
-    "@rarible/sdk-wallet-connector": "~0.8.6",
-    "@rarible/web3-ethereum": "~0.12.26",
-    "@rixio/react": "~0.9.6",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^12.0.0",
-    "@testing-library/user-event": "^13.2.1",
-    "@types/jest": "^27.0.1",
-    "@types/node": "^16.7.13",
-    "@types/react": "^17.0.20",
-    "@types/react-dom": "^17.0.9",
-    "antd": "^4.18.2",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-scripts": "4.0.3",
-    "rxjs": "^6.6.7",
-    "typescript": "^4.4.2",
-    "web-vitals": "^1.0.1"
-  },
   "scripts": {
-    "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "eject": "react-scripts eject",
+    "prettify:package": "sort-package-json",
+    "start": "react-scripts start"
   },
   "browserslist": {
     "production": [
@@ -45,5 +19,36 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.16.7",
+    "@rarible/protocol-ethereum-sdk": "~0.12.28",
+    "@rarible/sdk-wallet-connector": "~0.8.6",
+    "@rarible/web3-ethereum": "~0.12.26",
+    "@rixio/react": "~0.9.6",
+    "antd": "^4.18.2",
+    "google-protobuf": "^3.14.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "4.0.3",
+    "rxjs": "^6.6.7",
+    "tslib": "^2.3.1",
+    "web-vitals": "^1.0.1",
+    "web3": "^1.2.11"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.7",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.7.13",
+    "@types/react": "^17.0.20",
+    "@types/react-dom": "^17.0.9",
+    "rollup": "^2.0.0",
+    "sort-package-json": "^1.53.1",
+    "typescript": "^4.4.4"
   }
 }
