@@ -1908,17 +1908,17 @@
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.5.4.tgz#67b8130ba7823797e3a05e33c434056ffe0005a9"
   integrity sha512-86bDNIuSJ79nWObE+oesHcmxUfcwVS82Ur26SUuOaOg1HI2wP74B7LtmuhMdmSYbJq6J3O9gfPdsPmgXehB5qg==
 
-"@rarible/utils@0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@rarible/utils/-/utils-0.6.0.tgz#5c56f00fd711f2b6e66ff9303981c4614a077a44"
-  integrity sha512-olCaiq1SwlBNTEI1+x1cO7b8RFeoqbI3NHJhNW/HgBmtYTi8ShaAfuC+2rRLi8V6oI3XLFnB0cD8x/MXPrJJrw==
-  dependencies:
-    bignumber.js "^9.0.0"
-
 "@rarible/utils@~0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@rarible/utils/-/utils-0.5.0.tgz#e111e5cad0ba962747bf541eae3515b642b559de"
   integrity sha512-t1OgC2RJtRFHSqF0DKb6tk2HO3+a+lhbte1Z47AkoHoJ3oK4HjAXssydctP/wR8Y1/lIP2zMruShv297B+h8fw==
+  dependencies:
+    bignumber.js "^9.0.0"
+
+"@rarible/utils@~0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@rarible/utils/-/utils-0.6.0.tgz#5c56f00fd711f2b6e66ff9303981c4614a077a44"
+  integrity sha512-olCaiq1SwlBNTEI1+x1cO7b8RFeoqbI3NHJhNW/HgBmtYTi8ShaAfuC+2rRLi8V6oI3XLFnB0cD8x/MXPrJJrw==
   dependencies:
     bignumber.js "^9.0.0"
 
@@ -1931,7 +1931,7 @@
     eth-rpc-errors "^4.0.3"
     exponential-backoff "^3.1.0"
 
-"@rixio/atom@0.3.9", "@rixio/atom@^0.3.9", "@rixio/atom@~0.3.9":
+"@rixio/atom@^0.3.9", "@rixio/atom@~0.3.9":
   version "0.3.9"
   resolved "https://registry.yarnpkg.com/@rixio/atom/-/atom-0.3.9.tgz#82525e67d569fea57587c2c65f176ebbc2ba02f1"
   integrity sha512-xr4JSm2rwTasO/klGan3a0+rJM33AvtHVUR4inRUM8kZZ9SzXnJDV8t0jGnG2PpvFk8Igzy6R5oY5V5MxVWwCQ==
@@ -2580,6 +2580,11 @@
   version "1.5.5"
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.5.tgz#75a2a8e7d8ab4b230414505d92335d1dcb53a6df"
   integrity sha512-L28j2FcJfSZOnL1WBjDYp2vUHCeIFlyYI/53EwD/rKUBQ7MtUUfbQWiyKJGpcnv4/WgrhWsFKrcPstcAt/J0tQ==
+
+"@types/qs@^6.9.7":
+  version "6.9.7"
+  resolved "https://registry.yarnpkg.com/@types/qs/-/qs-6.9.7.tgz#63bb7d067db107cc1e457c303bc25d511febf6cb"
+  integrity sha512-FGa1F62FT09qcrueBA6qYTrJPVDzah9a+493+o2PCXsesWHIn27G98TsSMs3WPNbZIEj4+VJf6saSFpvD+3Zsw==
 
 "@types/react-dom@^17.0.9":
   version "17.0.11"
@@ -12058,6 +12063,13 @@ qs@6.9.6:
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.9.6.tgz#26ed3c8243a431b2924aca84cc90471f35d5a0ee"
   integrity sha512-TIRk4aqYLNoJUbd+g2lEdz5kLWIuTMRagAXxl78Q0RiVjAOugHmeKNGdd3cwo/ktpf9aL9epCfFqWDEKysUlLQ==
 
+qs@^6.10.2:
+  version "6.10.2"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.10.2.tgz#c1431bea37fc5b24c5bdbafa20f16bdf2a4b9ffe"
+  integrity sha512-mSIdjzqznWgfd4pMii7sHtaYF8rx8861hBO80SraY5GT0XQibWZWJSid0avzHGkDIZLImux2S5mXO0Hfct2QCw==
+  dependencies:
+    side-channel "^1.0.4"
+
 qs@~6.5.2:
   version "6.5.2"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
@@ -12247,7 +12259,7 @@ react-refresh@^0.8.3:
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.8.3.tgz#721d4657672d400c5e3c75d063c4a85fb2d5d68f"
   integrity sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg==
 
-react-scripts@4.0.3:
+react-scripts@^4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/react-scripts/-/react-scripts-4.0.3.tgz#b1cafed7c3fa603e7628ba0f187787964cb5d345"
   integrity sha512-S5eO4vjUzUisvkIPB7jVsKtuH2HhWcASREYWHAQ1FP5HyCv3xgn+wpILAEWkmy+A+tTNbSZClhxjT3qz6g4L1A==

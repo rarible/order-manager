@@ -9,9 +9,11 @@ import { TorusConnectionProvider } from "@rarible/sdk-wallet-connector/build/con
 import { WalletLinkConnectionProvider } from "@rarible/sdk-wallet-connector/build/connectors/ethereum/walletllink"
 import { Connector } from "@rarible/sdk-wallet-connector/build/connector"
 import { raribleStorageManager } from "../storage"
-import type { Connection, RaribleConnector } from "./domain"
+import { currentChainId } from "../config"
+import type { Connection, RaribleConnector, SupportedChain } from "./domain"
+import { chainIdToEnv } from "./utils"
 
-const ethereumRpcMap: Record<number, string> = {
+const ethereumRpcMap: Record<SupportedChain, string> = {
   1: "https://node-mainnet.rarible.com",
   3: "https://node-ropsten.rarible.com",
   4: "https://node-rinkeby.rarible.com",
@@ -21,11 +23,21 @@ const ethereumRpcMap: Record<number, string> = {
 function mapToSdk<O>(
   provider: AbstractConnectionProvider<O, EthereumProviderConnectionResult>,
 ): ConnectionProvider<O, Connection> {
-  return provider.map(conn => {
-    const web3 = new Web3(conn.provider)
+  return provider.map(x => {
+    const web3 = new Web3(x.provider)
+    const sdk = createRaribleSdk(
+      new Web3Ethereum({
+        web3,
+        from: x.address,
+      }),
+      chainIdToEnv(currentChainId),
+    )
     return {
-      sdk: createRaribleSdk(new Web3Ethereum({ web3, from: conn.address }), "rinkeby"),
-      address: conn.address,
+      type: x.chainId === currentChainId ? "connected" : "invalid-chain-id",
+      sdk,
+      requiredChainId: currentChainId,
+      address: x.address,
+      chainId: x.chainId,
     }
   })
 }
@@ -34,15 +46,15 @@ const injected = mapToSdk(new InjectedWeb3ConnectionProvider())
 
 const mew = mapToSdk(
   new MEWConnectionProvider({
-    networkId: 4,
-    rpcUrl: ethereumRpcMap[4],
+    networkId: currentChainId,
+    rpcUrl: ethereumRpcMap[currentChainId],
   }),
 )
 
 const torus = mapToSdk(
   new TorusConnectionProvider({
     network: {
-      host: "mainnet",
+      host: chainIdToEnv(currentChainId),
     },
   }),
 )
@@ -50,9 +62,9 @@ const torus = mapToSdk(
 const walletlink = mapToSdk(
   new WalletLinkConnectionProvider(
     {
-      estimationUrl: ethereumRpcMap[4],
-      networkId: 4,
-      url: ethereumRpcMap[4],
+      estimationUrl: ethereumRpcMap[currentChainId],
+      networkId: currentChainId,
+      url: ethereumRpcMap[currentChainId],
     },
     {
       appName: "Rarible",

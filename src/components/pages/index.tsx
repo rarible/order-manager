@@ -6,6 +6,8 @@ import { Footer } from "../common/footer"
 import { FullHeight } from "../common/full-height"
 import { Header } from "../common/header"
 import { ConnectionProvider } from "../../business/context"
+import { ActivityIndicator } from "../common/activity-indicator"
+import { InvalidChain } from "../common/invalid-chain"
 import { ConnectPage } from "./connect"
 import { OrdersPage } from "./orders"
 
@@ -46,11 +48,15 @@ type ContentProps = {
 
 function Content({ connector, state }: ContentProps) {
   if (state.status === "initializing") {
-    return <p>Initializing...</p>
+    return <ActivityIndicator />
   }
 
   if (state.status === "disconnected" || state.status === "connecting") {
     return <ConnectPage connector={connector} state={state} />
+  }
+
+  if (state.connection.type === "invalid-chain-id") {
+    return <InvalidChain id={state.connection.requiredChainId} />
   }
 
   return (

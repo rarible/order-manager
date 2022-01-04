@@ -1,6 +1,7 @@
 import { transparentize } from "polished"
 import styled from "styled-components"
 import type { RaribleConnectorState } from "../../business/blockchain/domain"
+import { getChainLabel } from "../../business/blockchain/utils"
 import { Address } from "./address"
 import { Touchable } from "./touchable"
 
@@ -16,12 +17,20 @@ export function StatusBar({ state }: StatusBarProps) {
     return (
       <div>
         <CurrentAddress address={state.connection.address} />
-        {state.disconnect && <DisconnectButton onClick={state.disconnect}>disconnect</DisconnectButton>}
+        <Description>
+          You're connected to {getChainLabel(state.connection.chainId)}{" "}
+          {state.disconnect && <DisconnectButton onClick={state.disconnect}>disconnect</DisconnectButton>}
+        </Description>
       </div>
     )
   }
   return null
 }
+
+const Description = styled.span`
+  display: block;
+  font-size: 14px;
+`
 
 const CurrentAddress = styled(Address)`
   font-weight: bold;
@@ -29,9 +38,6 @@ const CurrentAddress = styled(Address)`
 `
 
 const DisconnectButton = styled(Touchable)`
-  display: block;
-  font-size: 14px;
-
   color: ${p => p.theme.colors.primary};
   &:hover,
   &:active,
