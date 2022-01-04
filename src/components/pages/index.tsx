@@ -52,5 +52,5 @@ function Content({ connector, state }: ContentProps) {
     return <ConnectPage connector={connector} state={state} />
   }
 
-  return <OrdersPage state={state} />
+  return <OrdersPage state={state} api={state.connection.sdk.apis.order} />
 }

@@ -1,4 +1,4 @@
-import type { Order } from "@rarible/ethereum-api-client"
+import type { Order, OrderControllerApi } from "@rarible/ethereum-api-client"
 import { OrderStatus } from "@rarible/ethereum-api-client"
 import styled from "styled-components"
 import { Platform } from "@rarible/ethereum-api-client"
@@ -6,7 +6,6 @@ import type { StateConnected } from "@rarible/sdk-wallet-connector"
 import { Atom } from "@rixio/atom"
 import { useCallback, useMemo, useState } from "react"
 import { useAtom } from "@rixio/react"
-import { api } from "../../business/api"
 import type { Connection } from "../../business/blockchain/domain"
 import { TabNav } from "../common/tab-nav"
 import { createTabNav } from "../common/tab-nav/utils"
@@ -15,25 +14,26 @@ import { OrderList } from "../common/order-list"
 
 export type OrdersPageProps = {
   state: StateConnected<Connection>
+  api: OrderControllerApi
 }
 
-export function OrdersPage({ state }: OrdersPageProps) {
+export function OrdersPage({ state, api }: OrdersPageProps) {
   const [tab$] = useState(() => Atom.create<OrderStatus>(OrderStatus.INACTIVE))
   const status = useAtom(tab$)
 
   const loadMore = useCallback(
     async (continuation: string | undefined) => {
-      const x = await loadOrders(state.connection.address, status, continuation)
+      const x = await loadOrders(api, state.connection.address, status, continuation)
       return {
         data: x.orders,
         continuation: x.continuation,
       } as ListResponse<Order>
     },
-    [state, status],
+    [state, status, api],
   )
 
   const handleCancel = useMemo(() => {
-    if (status === OrderStatus.ACTIVE) {
+    if (status !== OrderStatus.CANCELLED) {
       return (order: Order) => state.connection.sdk.order.cancel(order)
     }
     return undefined
@@ -72,11 +72,10 @@ const labelByStatus: Record<SupportedStatus, string> = {
 
 const options = supportedStatus.map(x => createTabNav(x, labelByStatus[x as SupportedStatus]))
 
-function loadOrders(maker: string, status: OrderStatus, continuation: string | undefined) {
-  return api.order.getSellOrdersByMakerAndByStatus({
-    // maker: "0x9d22970d1d75aaee28b8a2c0d0c721d53769ed55",
+function loadOrders(api: OrderControllerApi, maker: string, status: OrderStatus, continuation: string | undefined) {
+  return api.getSellOrdersByMakerAndByStatus({
     maker: maker,
-    platform: Platform.OPEN_SEA,
+    platform: Platform.RARIBLE,
     status: [status],
     continuation,
   })
