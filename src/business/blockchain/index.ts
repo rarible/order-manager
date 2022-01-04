@@ -90,8 +90,8 @@ const walletlink = mapToSdk(
 const state$ = raribleStorageManager.getValue("CONNECTOR_STATE", undefined)
 
 export const connector: RaribleConnector = Connector.create(injected, {
-  getValue: () => Promise.resolve(state$.get()),
-  setValue: value => Promise.resolve(state$.set(value)),
+  getValue: async () => state$.get(),
+  setValue: async value => state$.set(value),
 })
   .add(torus)
   .add(walletlink)
