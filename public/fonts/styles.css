@@ -1,0 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@700&display=swap");
+
+@font-face {
+  font-weight: 400;
+  font-family: "Circular Std";
+  src: local("Circular Std Book"), url("../assets/fonts/CircularXXWeb-Book.woff") format("woff"),
+    url("../assets/fonts/CircularXXWeb-Book.woff2") format("woff2");
+}
+
+@font-face {
+  font-weight: 700;
+  font-family: "Circular Std";
+  src: local("Circular Std Bold"), url("../assets/fonts/CircularStd-Bold.woff") format("woff"),
+    url("../assets/fonts/CircularStd-Bold.woff2") format("woff2");
+}

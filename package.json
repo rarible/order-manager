@@ -1,38 +1,17 @@
 {
-  "name": "order-checker",
+  "name": "@rarible/order-checker",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@rarible/protocol-ethereum-sdk": "~0.12.28",
-    "@rarible/sdk-wallet-connector": "~0.8.6",
-    "@rarible/web3-ethereum": "~0.12.26",
-    "@rixio/react": "~0.9.6",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^12.0.0",
-    "@testing-library/user-event": "^13.2.1",
-    "@types/jest": "^27.0.1",
-    "@types/node": "^16.7.13",
-    "@types/react": "^17.0.20",
-    "@types/react-dom": "^17.0.9",
-    "antd": "^4.18.2",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-scripts": "4.0.3",
-    "rxjs": "^6.6.7",
-    "typescript": "^4.4.2",
-    "web-vitals": "^1.0.1"
-  },
   "scripts": {
-    "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "eject": "react-scripts eject",
+    "prettify": "run-s \"prettify:*\"",
+    "prettify:code": "prettier ./ --write",
+    "prettify:package": "sort-package-json",
+    "start": "react-scripts start",
+    "verify": "run-p \"verify:*\"",
+    "verify:js": "eslint --ext .js,.jsx,.ts,.tsx ./",
+    "verify:types": "tsc --noEmit"
   },
   "browserslist": {
     "production": [
@@ -45,5 +24,56 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "eslintConfig": {
+    "plugins": [
+      "prettier"
+    ],
+    "extends": [
+      "react-app",
+      "@rarible/eslint-config-ts",
+      "plugin:prettier/recommended"
+    ],
+    "rules": {
+      "prettier/prettier": "error"
+    }
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.16.7",
+    "@rarible/protocol-ethereum-sdk": "~0.12.28",
+    "@rarible/sdk-wallet-connector": "~0.8.6",
+    "@rarible/web3-ethereum": "~0.12.26",
+    "@rarible/ethereum-api-client": "~0.1.18",
+    "@rixio/atom": "0.3.9",
+    "@rixio/react": "~0.9.6",
+    "google-protobuf": "^3.14.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-is": "^16.8.0",
+    "react-scripts": "4.0.3",
+    "rxjs": "^6.6.7",
+    "@rarible/utils": "0.6.0",
+    "styled-components": "^5.3.3",
+    "styled-reset": "^4.3.4",
+    "tslib": "^2.3.1",
+    "web3": "^1.2.11",
+    "polished": "^4.1.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.7",
+    "@rarible/eslint-config-react": "~0.6.0",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.7.13",
+    "@types/react": "^17.0.20",
+    "@types/react-dom": "^17.0.9",
+    "@types/styled-components": "^5.1.19",
+    "eslint": "^7.7.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.5.1",
+    "rollup": "^2.0.0",
+    "sort-package-json": "^1.53.1",
+    "typescript": "^4.4.4"
   }
 }
