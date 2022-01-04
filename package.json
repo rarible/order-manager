@@ -5,8 +5,13 @@
   "scripts": {
     "build": "react-scripts build",
     "eject": "react-scripts eject",
+    "prettify": "run-s \"prettify:*\"",
+    "prettify:code": "prettier ./ --write",
     "prettify:package": "sort-package-json",
-    "start": "react-scripts start"
+    "start": "react-scripts start",
+    "verify": "run-p \"verify:*\"",
+    "verify:js": "eslint --ext .js,.jsx,.ts,.tsx ./",
+    "verify:types": "tsc --noEmit"
   },
   "browserslist": {
     "production": [
@@ -21,15 +26,24 @@
     ]
   },
   "eslintConfig": {
+    "plugins": [
+      "prettier"
+    ],
     "extends": [
-      "react-app"
-    ]
+      "react-app",
+      "@rarible/eslint-config-ts",
+      "plugin:prettier/recommended"
+    ],
+    "rules": {
+      "prettier/prettier": "error"
+    }
   },
   "dependencies": {
     "@babel/runtime": "^7.16.7",
     "@rarible/protocol-ethereum-sdk": "~0.12.28",
     "@rarible/sdk-wallet-connector": "~0.8.6",
     "@rarible/web3-ethereum": "~0.12.26",
+    "@rixio/atom": "0.3.9",
     "@rixio/react": "~0.9.6",
     "antd": "^4.18.2",
     "google-protobuf": "^3.14.0",
@@ -42,10 +56,16 @@
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",
+    "@rarible/eslint-config-react": "~0.6.0",
     "@types/jest": "^27.0.1",
     "@types/node": "^16.7.13",
     "@types/react": "^17.0.20",
     "@types/react-dom": "^17.0.9",
+    "eslint": "^7.7.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.5.1",
     "rollup": "^2.0.0",
     "sort-package-json": "^1.53.1",
     "typescript": "^4.4.4"

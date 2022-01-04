@@ -1,14 +1,10 @@
-import React, { FC } from 'react';
-import './App.css';
-import { SdkWalletConnector } from "./connector/component";
-import { connector } from "./connector";
+import { connector } from "../business/blockchain"
+import { SdkWalletConnector } from "./connector"
 
-const App: FC = () => (
+export function App() {
+  return (
     <div className="App">
-      <SdkWalletConnector connector={connector}>{
-          ({ sdk, address }) => <div>connected: {address}</div>
-      }</SdkWalletConnector>
+      <SdkWalletConnector connector={connector}>{({ address }) => <div>connected: {address}</div>}</SdkWalletConnector>
     </div>
-);
-
-export default App;
+  )
+}
