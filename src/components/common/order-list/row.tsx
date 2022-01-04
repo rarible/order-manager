@@ -14,12 +14,12 @@ import styled from "styled-components"
 import { useRx } from "@rixio/react"
 import type { Wrapped } from "@rixio/wrapped"
 import { formatDecimal } from "../../../utils/format-decimal"
-import { getAssetLinkRarible } from "../../../utils/get-asset-link"
 import { ExternalLink } from "../link"
 import { Touchable } from "../touchable"
 import { useConnectionContext } from "../../../business/context"
 import { cutString } from "../../../utils/cut-string"
 import type { ItemData } from "../../../business/item/domain"
+import { useAssetLink } from "../../../hooks/use-asset-link"
 
 export type OrderRowProps = {
   order: Order
@@ -84,10 +84,11 @@ function NftAssetEntry({ asset, valueDecimal }: NftAssetEntryProps) {
   const data$ = useMemo(() => itemService.getItemData(asset), [asset, itemService])
   const data = useRx(data$)
   const name = renderName(data)
+  const link = useAssetLink(asset.contract, asset.tokenId)
 
   return (
     <NftProps>
-      <ExternalLink href={getAssetLinkRarible(asset.contract, asset.tokenId)}>
+      <ExternalLink href={link}>
         <li>
           <Title title={name}>→ {name}</Title>
         </li>
