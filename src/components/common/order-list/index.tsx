@@ -24,10 +24,12 @@ function renderWrapper(content: React.ReactElement) {
   return (
     <Table>
       <thead>
-        <th scope="col">#</th>
-        <th scope="col">Make</th>
-        <th scope="col">Take</th>
-        <th scope="col">Actions</th>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Make</th>
+          <th scope="col">Take</th>
+          <th scope="col">Actions</th>
+        </tr>
       </thead>
       <tbody>{content}</tbody>
     </Table>

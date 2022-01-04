@@ -1,14 +1,8 @@
-import type { Observable } from "rxjs"
-import type { Wrapped } from "@rixio/wrapped"
 import type { AssetType, NftCollection, NftItem } from "@rarible/ethereum-api-client"
 import type { KeyCache } from "@rixio/cache"
 import { rxObject } from "@rixio/react"
-
-type OW<T> = Observable<Wrapped<T>>
-export type ItemData = {
-  item: NftItem
-  collection: NftCollection
-}
+import type { OW } from "../domain"
+import type { ItemData } from "./domain"
 
 export class ItemService {
   constructor(

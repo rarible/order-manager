@@ -1,4 +1,4 @@
-import type { Order, OrderControllerApi } from "@rarible/ethereum-api-client"
+import type { Order } from "@rarible/ethereum-api-client"
 import { OrderStatus, Platform } from "@rarible/ethereum-api-client"
 import styled from "styled-components"
 import { Atom } from "@rixio/atom"
@@ -8,30 +8,31 @@ import { TabNav } from "../common/tab-nav"
 import { createTabNav } from "../common/tab-nav/utils"
 import type { ListResponse } from "../common/list"
 import { OrderList } from "../common/order-list"
-import { useAppContext } from "../../business/context"
+import { useConnectionContext } from "../../business/context"
+import type { RaribleConnectedState } from "../../business/blockchain/domain"
 
 export function OrdersPage() {
-  const { address, sdk } = useAppContext()
+  const { state } = useConnectionContext()
   const [tab$] = useState(() => Atom.create<OrderStatus>(OrderStatus.INACTIVE))
   const status = useAtom(tab$)
 
   const loadMore = useCallback(
     async (continuation: string | undefined) => {
-      const x = await loadOrders(sdk.apis.order, address, status, continuation)
+      const x = await loadOrders(state, status, continuation)
       return {
         data: x.orders,
         continuation: x.continuation,
       } as ListResponse<Order>
     },
-    [address, sdk.apis.order, status],
+    [state, status],
   )
 
   const handleCancel = useMemo(() => {
     if (status !== OrderStatus.CANCELLED) {
-      return (order: Order) => sdk.order.cancel(order)
+      return (order: Order) => state.connection.sdk.order.cancel(order)
     }
     return undefined
-  }, [status, sdk])
+  }, [status, state])
 
   return (
     <Wrapper>
@@ -66,9 +67,9 @@ const labelByStatus: Record<SupportedStatus, string> = {
 
 const options = supportedStatus.map(x => createTabNav(x, labelByStatus[x as SupportedStatus]))
 
-function loadOrders(api: OrderControllerApi, maker: string, status: OrderStatus, continuation: string | undefined) {
-  return api.getSellOrdersByMakerAndByStatus({
-    maker: maker,
+function loadOrders(state: RaribleConnectedState, status: OrderStatus, continuation: string | undefined) {
+  return state.connection.sdk.apis.order.getSellOrdersByMakerAndByStatus({
+    maker: state.connection.address,
     platform: Platform.RARIBLE,
     status: [status],
     continuation,

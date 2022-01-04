@@ -1,57 +1,39 @@
 import type { PropsWithChildren } from "react"
 import React, { useContext, useMemo } from "react"
-import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import type { CacheState } from "@rixio/cache"
-import { KeyCacheImpl, toListDataLoader } from "@rixio/cache"
-import type { NftCollection, NftItem } from "@rarible/ethereum-api-client"
-import { Atom } from "@rixio/atom"
-import { Map as IM } from "immutable"
-import { ItemService } from "./service/item"
+import type { RaribleConnectedState } from "./blockchain/domain"
+import { ItemService } from "./item/service"
+import { createCollectionCache, createItemCache } from "./item/cache"
 
-export type AppContext = {
-  address: string
-  sdk: RaribleSdk
+export type ConnectionContext = {
+  state: RaribleConnectedState
   itemService: ItemService
 }
 
-const appContext = React.createContext<AppContext>(undefined as any)
+const connectionContext = React.createContext<ConnectionContext | undefined>(undefined)
 
-export function useAppContext(): AppContext {
-  return useContext(appContext)
+export function useConnectionContext(): ConnectionContext {
+  const context = useContext(connectionContext)
+  if (!context) {
+    throw new Error("Connection provider is not defined")
+  }
+  return context
 }
 
-type AppRootProps = {
-  address: string
-  sdk: RaribleSdk
+type ConnectionProviderProps = {
+  state: RaribleConnectedState
 }
 
-export function AppRoot({ children, address, sdk }: PropsWithChildren<AppRootProps>) {
-  const ctx = useMemo(() => createContext(address, sdk), [address, sdk])
-  return <appContext.Provider value={ctx}>{children}</appContext.Provider>
+export function ConnectionProvider({ children, state }: PropsWithChildren<ConnectionProviderProps>) {
+  const ctx = useMemo(() => createContext(state), [state])
+  return <connectionContext.Provider value={ctx}>{children}</connectionContext.Provider>
 }
 
-type State = {
-  items: IM<string, CacheState<NftItem>>
-  collections: IM<string, CacheState<NftCollection>>
-}
+function createContext(state: RaribleConnectedState): ConnectionContext {
+  const collectionCache = createCollectionCache(state.connection.sdk)
+  const itemCache = createItemCache(state.connection.sdk)
 
-const state = Atom.create<State>({
-  items: IM(),
-  collections: IM(),
-})
-
-function createContext(address: string, sdk: RaribleSdk): AppContext {
-  const itemCache = new KeyCacheImpl<string, NftItem>(
-    state.lens("items"),
-    toListDataLoader(itemId => sdk.apis.nftItem.getNftItemById({ itemId })),
-  )
-  const collectionCache = new KeyCacheImpl<string, NftCollection>(
-    state.lens("collections"),
-    toListDataLoader(collection => sdk.apis.nftCollection.getNftCollectionById({ collection })),
-  )
   return {
-    address,
-    sdk,
+    state,
     itemService: new ItemService(itemCache, collectionCache),
   }
 }

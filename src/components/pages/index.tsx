@@ -5,7 +5,7 @@ import { Container } from "../common/container"
 import { Footer } from "../common/footer"
 import { FullHeight } from "../common/full-height"
 import { Header } from "../common/header"
-import { AppRoot } from "../../business/context"
+import { ConnectionProvider } from "../../business/context"
 import { ConnectPage } from "./connect"
 import { OrdersPage } from "./orders"
 
@@ -54,8 +54,8 @@ function Content({ connector, state }: ContentProps) {
   }
 
   return (
-    <AppRoot address={state.connection.address} sdk={state.connection.sdk}>
+    <ConnectionProvider state={state}>
       <OrdersPage />
-    </AppRoot>
+    </ConnectionProvider>
   )
 }

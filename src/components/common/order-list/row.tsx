@@ -9,7 +9,7 @@ import type {
   Order,
 } from "@rarible/ethereum-api-client"
 import { toBn } from "@rarible/utils"
-import React, { useMemo } from "react"
+import { useMemo } from "react"
 import styled from "styled-components"
 import { useRx } from "@rixio/react"
 import type { Wrapped } from "@rixio/wrapped"
@@ -17,9 +17,9 @@ import { formatDecimal } from "../../../utils/format-decimal"
 import { getAssetLinkRarible } from "../../../utils/get-asset-link"
 import { ExternalLink } from "../link"
 import { Touchable } from "../touchable"
-import { useAppContext } from "../../../business/context"
-import type { ItemData } from "../../../business/service/item"
+import { useConnectionContext } from "../../../business/context"
 import { cutString } from "../../../utils/cut-string"
+import type { ItemData } from "../../../business/item/domain"
 
 export type OrderRowProps = {
   order: Order
@@ -80,7 +80,7 @@ type NftAssetEntryProps = {
 }
 
 function NftAssetEntry({ asset, valueDecimal }: NftAssetEntryProps) {
-  const { itemService } = useAppContext()
+  const { itemService } = useConnectionContext()
   const data$ = useMemo(() => itemService.getItemData(asset), [asset, itemService])
   const data = useRx(data$)
   const name = renderName(data)
