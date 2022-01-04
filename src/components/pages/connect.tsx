@@ -1,7 +1,7 @@
-import { Rx } from "@rixio/react"
-import { useMemo } from "react"
-import { defer } from "rxjs"
+import styled from "styled-components"
 import type { RaribleConnector, RaribleConnectorState } from "../../business/blockchain/domain"
+import { ConnectOptions } from "../common/connect-options"
+import { Heading2 } from "../common/heading"
 
 export type ConnectPageProps = {
   connector: RaribleConnector
@@ -9,29 +9,30 @@ export type ConnectPageProps = {
 }
 
 export function ConnectPage({ connector, state }: ConnectPageProps) {
-  return <Options connector={connector} state={state} />
-}
-
-type OptionsProps = {
-  connector: RaribleConnector
-  state: RaribleConnectorState
-}
-
-function Options({ connector, state }: OptionsProps) {
-  const options$ = useMemo(() => defer(() => connector.getOptions()), [connector])
   return (
-    <Rx value$={options$}>
-      {options => (
-        <div>
-          <p>Connect to:</p>
-          {options.map(o => (
-            <div key={o.option}>
-              <button onClick={() => connector.connect(o)}>{o.option}</button>
-              {state.status === "connecting" && state.providerId === o.provider.getId() ? "Connecting..." : null}
-            </div>
-          ))}
-        </div>
-      )}
-    </Rx>
+    <Wrapper>
+      <Heading2>Step 1. Connect wallet</Heading2>
+      <Description>
+        Connect your wallet to check your active orders with Rarible's protocol API. We do not own your private keys and
+        cannot access your funds without your confirmation.
+      </Description>
+      <ConnectionWrapper>
+        <ConnectOptions connector={connector} state={state} />
+      </ConnectionWrapper>
+    </Wrapper>
   )
 }
+
+const Wrapper = styled.div`
+  width: 100%;
+`
+
+const Description = styled.p`
+  color: ${p => p.theme.colors.sub};
+  font-size: 18px;
+  margin-top: 16px;
+`
+
+const ConnectionWrapper = styled.div`
+  margin-top: 24px;
+`

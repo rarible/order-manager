@@ -6,5 +6,6 @@ export type Connection = {
   address: string
 }
 
-export type RaribleConnector = IConnector<DappType | "mew" | "torus" | "walletlink", Connection>
+export type SupportedConnectionType = DappType | "mew" | "torus" | "walletlink"
+export type RaribleConnector = IConnector<SupportedConnectionType, Connection>
 export type RaribleConnectorState = ConnectionState<Connection>
