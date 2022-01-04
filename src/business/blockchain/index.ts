@@ -9,7 +9,7 @@ import { TorusConnectionProvider } from "@rarible/sdk-wallet-connector/build/con
 import { WalletLinkConnectionProvider } from "@rarible/sdk-wallet-connector/build/connectors/ethereum/walletllink"
 import { Connector } from "@rarible/sdk-wallet-connector/build/connector"
 import { raribleStorageManager } from "../storage"
-import type { Connection } from "./domain"
+import type { Connection, RaribleConnector } from "./domain"
 
 const ethereumRpcMap: Record<number, string> = {
   1: "https://node-mainnet.rarible.com",
@@ -77,7 +77,7 @@ const walletlink = mapToSdk(
 
 const state$ = raribleStorageManager.getValue("CONNECTOR_STATE", undefined)
 
-export const connector = Connector.create(injected, {
+export const connector: RaribleConnector = Connector.create(injected, {
   getValue: () => Promise.resolve(state$.get()),
   setValue: value => Promise.resolve(state$.set(value)),
 })

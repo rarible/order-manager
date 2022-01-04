@@ -1,8 +1,26 @@
-import { connector } from "../../business/blockchain"
-import { SdkWalletConnector } from "../common/connector"
+import { Rx } from "@rixio/react"
+import type { RaribleConnector } from "../../business/blockchain/domain"
+import { ConnectPage } from "./connect"
+import { OrdersPage } from "./orders"
 
-export function IndexPage() {
+export type IndexPageProps = {
+  connector: RaribleConnector
+}
+
+export function IndexPage({ connector }: IndexPageProps) {
   return (
-    <SdkWalletConnector connector={connector}>{({ address }) => <div>connected: {address}</div>}</SdkWalletConnector>
+    <Rx value$={connector.connection}>
+      {state => {
+        if (state.status === "initializing") {
+          return <p>Initializing...</p>
+        }
+
+        if (state.status === "disconnected" || state.status === "connecting") {
+          return <ConnectPage connector={connector} state={state} />
+        }
+
+        return <OrdersPage state={state} />
+      }}
+    </Rx>
   )
 }
