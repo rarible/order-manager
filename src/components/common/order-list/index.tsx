@@ -17,7 +17,13 @@ export function OrderList({ onLoadMore, onCancel }: OrderListProps) {
     },
     [onCancel],
   )
-  return <List renderWrapper={renderWrapper} onLoadMore={onLoadMore} renderItem={renderEntry} />
+  return (
+    <List getItemKey={getOrderKey} renderWrapper={renderWrapper} onLoadMore={onLoadMore} renderItem={renderEntry} />
+  )
+}
+
+function getOrderKey(order: Order) {
+  return order.hash
 }
 
 function renderWrapper(content: React.ReactElement) {

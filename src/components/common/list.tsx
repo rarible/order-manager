@@ -17,6 +17,7 @@ export type ListProps<T> = {
   onLoadMore: (continuation: string | undefined) => Promise<ListResponse<T>>
   renderItem: (entry: T, i: number) => ReactElement
   renderWrapper: (content: ReactElement) => ReactElement
+  getItemKey: (data: T) => string
 }
 
 type ListState<T> = {
@@ -25,15 +26,16 @@ type ListState<T> = {
   hasMore: boolean
 }
 
-export function List<T>({ renderWrapper, onLoadMore, renderItem }: ListProps<T>) {
-  const [state, setState] = useState<ListState<T>>({
-    continuation: undefined,
-    items: [],
-    hasMore: true,
-  })
+export function List<T>({ renderWrapper, getItemKey, onLoadMore, renderItem }: ListProps<T>) {
+  const [state, setState] = useState<ListState<T>>(() => getDefaulState())
   const [isLoading, setIsLoading] = useState(false)
   const [hasError, setHasError] = useState(false)
-  const firstLoad = useRef(false)
+  const [firstLoadDid, setFirstLoadDid] = useState(false)
+
+  useEffect(() => {
+    setFirstLoadDid(false)
+    setState(getDefaulState())
+  }, [onLoadMore])
 
   const loadData = useCallback(
     (continuation: string | undefined) => {
@@ -54,11 +56,11 @@ export function List<T>({ renderWrapper, onLoadMore, renderItem }: ListProps<T>)
   )
 
   useEffect(() => {
-    if (!firstLoad.current) {
+    if (!firstLoadDid) {
       loadData(undefined)
-      firstLoad.current = true
+      setFirstLoadDid(true)
     }
-  }, [loadData])
+  }, [loadData, firstLoadDid])
 
   if (isLoading && state.items.length === 0) {
     return <ActivityIndicator />
@@ -92,20 +94,24 @@ export function List<T>({ renderWrapper, onLoadMore, renderItem }: ListProps<T>)
   }
 
   return (
-    <React.Fragment>
+    <Wrapper>
       {renderWrapper(
         <React.Fragment>
           {state.items.map((x, i) => (
-            <React.Fragment key={i} children={renderItem(x, i)} />
+            <React.Fragment key={getItemKey(x)} children={renderItem(x, i)} />
           ))}
         </React.Fragment>,
       )}
       <BarWrapper>
         <Bar onLoadMore={() => loadData(state.continuation)} state={state} isLoading={isLoading} />
       </BarWrapper>
-    </React.Fragment>
+    </Wrapper>
   )
 }
+
+const Wrapper = styled.div`
+  width: 100%;
+`
 
 const BarWrapper = styled.div`
   margin-top: 32px;
@@ -131,3 +137,11 @@ const LoadMoreButton = styled(Touchable)`
   font-size: 16px;
   color: ${p => p.theme.colors.primary};
 `
+
+function getDefaulState<T>(): ListState<T> {
+  return {
+    continuation: undefined,
+    items: [],
+    hasMore: true,
+  }
+}

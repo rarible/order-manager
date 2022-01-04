@@ -89,7 +89,7 @@ function NftAssetEntry({ asset, valueDecimal }: NftAssetEntryProps) {
     <NftProps>
       <ExternalLink href={getAssetLinkRarible(asset.contract, asset.tokenId)}>
         <li>
-          <Title title={name}>{name}</Title>
+          <Title title={name}>→ {name}</Title>
         </li>
       </ExternalLink>
       <li>Contract: {asset.contract}</li>
