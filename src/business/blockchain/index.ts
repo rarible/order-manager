@@ -24,7 +24,7 @@ function mapToSdk<O>(
   return provider.map(conn => {
     const web3 = new Web3(conn.provider)
     return {
-      sdk: createRaribleSdk(new Web3Ethereum({ web3, from: conn.address }), "mainnet"),
+      sdk: createRaribleSdk(new Web3Ethereum({ web3, from: conn.address }), "rinkeby"),
       address: conn.address,
     }
   })
