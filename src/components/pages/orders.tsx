@@ -45,11 +45,15 @@ export function OrdersPage() {
 }
 
 const Wrapper = styled.div`
-  width: 100%;
+  display: flex;
+  flex-flow: column;
+  flex-grow: 1;
 `
 
 const ContentWrapper = styled.div`
   margin-top: 8px;
+  display: flex;
+  flex-grow: 1;
 `
 
 /**

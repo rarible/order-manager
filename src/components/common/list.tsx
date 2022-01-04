@@ -5,7 +5,8 @@ import { useEffect } from "react"
 import { useState } from "react"
 import styled from "styled-components"
 import { Touchable } from "./touchable"
-import { Heading3 } from "./heading"
+import { ActivityIndicator } from "./activity-indicator"
+import { Jumbotron } from "./jumbotron"
 
 export type ListResponse<T> = {
   continuation: string
@@ -60,38 +61,38 @@ export function List<T>({ renderWrapper, onLoadMore, renderItem }: ListProps<T>)
   }, [loadData])
 
   if (isLoading && state.items.length === 0) {
-    return (
-      <BarWrapper>
-        <Heading3>Loading..</Heading3>
-      </BarWrapper>
-    )
+    return <ActivityIndicator />
   }
 
   if (state.items.length === 0 && !state.hasMore) {
     return (
-      <BarWrapper>
-        <Heading3>No entries</Heading3>
-        <Description>
-          There's no orders with this criteria.{" "}
-          <LoadMoreButton onClick={() => loadData(undefined)}>Refresh list</LoadMoreButton>
-        </Description>
-      </BarWrapper>
+      <Jumbotron
+        label="No entries"
+        description={
+          <React.Fragment>
+            There's no orders with this criteria.{" "}
+            <LoadMoreButton onClick={() => loadData(undefined)}>Refresh list</LoadMoreButton>
+          </React.Fragment>
+        }
+      />
     )
   }
 
   if (hasError) {
     return (
-      <BarWrapper>
-        <Heading3>Ooops..</Heading3>
-        <Description>
-          Something went wrong. <LoadMoreButton onClick={() => loadData(undefined)}>Try again</LoadMoreButton>
-        </Description>
-      </BarWrapper>
+      <Jumbotron
+        label="Ooops.."
+        description={
+          <React.Fragment>
+            Something went wrong. <LoadMoreButton onClick={() => loadData(undefined)}>Try again</LoadMoreButton>
+          </React.Fragment>
+        }
+      />
     )
   }
 
   return (
-    <div>
+    <React.Fragment>
       {renderWrapper(
         <React.Fragment>
           {state.items.map((x, i) => (
@@ -102,14 +103,9 @@ export function List<T>({ renderWrapper, onLoadMore, renderItem }: ListProps<T>)
       <BarWrapper>
         <Bar onLoadMore={() => loadData(state.continuation)} state={state} isLoading={isLoading} />
       </BarWrapper>
-    </div>
+    </React.Fragment>
   )
 }
-
-const Description = styled.span`
-  margin-top: 4px;
-  display: block;
-`
 
 const BarWrapper = styled.div`
   margin-top: 32px;
@@ -133,6 +129,5 @@ function Bar<T>({ state, onLoadMore, isLoading }: BarProps<T>) {
 
 const LoadMoreButton = styled(Touchable)`
   font-size: 16px;
-  font-weight: bold;
   color: ${p => p.theme.colors.primary};
 `

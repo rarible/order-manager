@@ -1,6 +1,5 @@
-import styled from "styled-components"
 import { getChainLabel } from "../../business/blockchain/utils"
-import { Heading2 } from "./heading"
+import { Jumbotron } from "./jumbotron"
 
 type InvalidChainProps = {
   id: number
@@ -8,19 +7,9 @@ type InvalidChainProps = {
 
 export function InvalidChain({ id }: InvalidChainProps) {
   return (
-    <Wrapper>
-      <Heading2>Unsupported chain id</Heading2>
-      <Description>Please switch your network to {getChainLabel(id)} network</Description>
-    </Wrapper>
+    <Jumbotron
+      label="Unsupported chain id"
+      description={`Please switch your network to ${getChainLabel(id)} network`}
+    />
   )
 }
-
-const Wrapper = styled.div`
-  margin: auto;
-  text-align: center;
-  max-width: 320px;
-`
-
-const Description = styled.p`
-  margin-top: 12px;
-`

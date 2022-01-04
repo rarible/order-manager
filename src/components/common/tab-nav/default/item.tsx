@@ -26,7 +26,6 @@ const LabelText = styled.span`
   white-space: nowrap;
   vertical-align: middle;
   font-size: 16px;
-  font-weight: bold;
   line-height: 36px;
 `
 
