@@ -5,7 +5,7 @@ import type { KeyCache } from "@rixio/cache"
 import { rxObject } from "@rixio/react"
 
 type OW<T> = Observable<Wrapped<T>>
-type ItemData = {
+export type ItemData = {
   item: NftItem
   collection: NftCollection
 }

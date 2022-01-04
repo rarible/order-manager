@@ -1,6 +1,7 @@
 import type {
   Asset,
   AssetType,
+  BigNumber,
   Erc1155AssetType,
   Erc1155LazyAssetType,
   Erc721AssetType,
@@ -8,14 +9,17 @@ import type {
   Order,
 } from "@rarible/ethereum-api-client"
 import { toBn } from "@rarible/utils"
-import React from "react"
+import React, { useMemo } from "react"
 import styled from "styled-components"
 import { useRx } from "@rixio/react"
+import type { Wrapped } from "@rixio/wrapped"
 import { formatDecimal } from "../../../utils/format-decimal"
 import { getAssetLinkRarible } from "../../../utils/get-asset-link"
-import { Link } from "../link"
+import { ExternalLink } from "../link"
 import { Touchable } from "../touchable"
 import { useAppContext } from "../../../business/context"
+import type { ItemData } from "../../../business/service/item"
+import { cutString } from "../../../utils/cut-string"
 
 export type OrderRowProps = {
   order: Order
@@ -28,7 +32,7 @@ export function OrderRow({ order, index, onCancel }: OrderRowProps) {
     <tr>
       <td>{index + 1}</td>
       <td>
-        <NftAssetEntry asset={order.make} />
+        <AssetEntry asset={order.make} />
       </td>
       <td>
         <AssetEntry asset={order.take} />
@@ -46,6 +50,17 @@ export function OrderRow({ order, index, onCancel }: OrderRowProps) {
   )
 }
 
+type AssetEntryProps = {
+  asset: Asset
+}
+
+function AssetEntry({ asset }: AssetEntryProps) {
+  if (isNftAsset(asset.assetType)) {
+    return <NftAssetEntry valueDecimal={asset.valueDecimal} asset={asset.assetType} />
+  }
+  return <GenericAsset asset={asset} />
+}
+
 const Menu = styled.ul`
   display: flex;
   flex-flow: row wrap;
@@ -60,65 +75,58 @@ const Button = styled(Touchable)`
 `
 
 type NftAssetEntryProps = {
-  asset: Asset
+  asset: Erc721AssetType | Erc721LazyAssetType | Erc1155LazyAssetType | Erc1155AssetType
+  valueDecimal: BigNumber | undefined
 }
 
-function NftAssetEntry({ asset }: NftAssetEntryProps) {
+function NftAssetEntry({ asset, valueDecimal }: NftAssetEntryProps) {
   const { itemService } = useAppContext()
-  const itemData = useRx(itemService.getItemData(asset.assetType), [asset.assetType])
+  const data$ = useMemo(() => itemService.getItemData(asset), [asset, itemService])
+  const data = useRx(data$)
+  const name = renderName(data)
 
   return (
-    <div>
-      <ul>
+    <NftProps>
+      <ExternalLink href={getAssetLinkRarible(asset.contract, asset.tokenId)}>
         <li>
-          {isNftAsset(asset.assetType) && (
-            <Link
-              href={getAssetLinkRarible(asset.assetType.contract, asset.assetType.tokenId)}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <li>
-                <Button>
-                  {itemData.status === "fulfilled"
-                    ? `${itemData.value.collection.name} - ${itemData.value.item.meta?.name}`
-                    : itemData.status}
-                </Button>
-              </li>
-            </Link>
-          )}
+          <Title title={name}>{name}</Title>
         </li>
-        {asset.valueDecimal ? (
-          <li>Value: {formatDecimal(toBn(asset.valueDecimal.toString()).toNumber())}</li>
-        ) : (
-          <li>Value: None</li>
-        )}
-      </ul>
-    </div>
+      </ExternalLink>
+      <li>Contract: {asset.contract}</li>
+      <li>Id: {cutString(asset.tokenId, 16)}</li>
+      <li>Value: {getAssetValue(valueDecimal)}</li>
+    </NftProps>
   )
 }
 
-type AssetEntryProps = {
+const NftProps = styled.ul`
+  max-width: 460px;
+`
+
+const Title = styled.span`
+  display: block;
+  font-weight: bold;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+`
+
+function renderName(data: Wrapped<ItemData>) {
+  if (data.status === "fulfilled") return `${data.value.collection.name} - ${data.value.item.meta?.name}`
+  if (data.status === "pending") return "Loading.."
+  if (data.status === "rejected") return "Untitled"
+}
+
+type GenericAssetProps = {
   asset: Asset
 }
 
-function AssetEntry({ asset }: AssetEntryProps) {
+function GenericAsset({ asset }: GenericAssetProps) {
   return (
-    <div>
-      <ul>
-        <li>Type: {asset.assetType.assetClass}</li>
-        {isNftAsset(asset.assetType) ? (
-          <React.Fragment>
-            <li>Contract: {asset.assetType.contract}</li>
-            <li>Id: {asset.assetType.tokenId}</li>
-          </React.Fragment>
-        ) : null}
-        {asset.valueDecimal ? (
-          <li>Value: {formatDecimal(toBn(asset.valueDecimal.toString()).toNumber())}</li>
-        ) : (
-          <li>Value: None</li>
-        )}
-      </ul>
-    </div>
+    <ul>
+      <li>Type: {asset.assetType.assetClass}</li>
+      <li>Value: {getAssetValue(asset.valueDecimal)}</li>
+    </ul>
   )
 }
 
@@ -131,4 +139,11 @@ function isNftAsset(
     x.assetClass === "ERC721_LAZY" ||
     x.assetClass === "ERC1155_LAZY"
   )
+}
+
+function getAssetValue(value: BigNumber | undefined) {
+  if (value) {
+    return formatDecimal(toBn(value.toString()).toNumber())
+  }
+  return "None"
 }

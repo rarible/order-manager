@@ -1,3 +1,4 @@
+import type { StyledComponentPropsWithRef } from "styled-components"
 import styled from "styled-components"
 import { transparentize } from "polished"
 
@@ -8,11 +9,13 @@ export const Link = styled.a`
   &:hover,
   &:focus,
   &:active {
-    background: linear-gradient(126.49deg, #00a3ff 0%, #0066ff 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     color: ${p => transparentize(0.1, p.theme.colors.primary)};
     cursor: pointer;
   }
 `
+
+export type LinkProps = StyledComponentPropsWithRef<typeof Link>
+
+export function ExternalLink(props: LinkProps) {
+  return <Link target="_blank" rel="noopener noreferrer" {...props} />
+}
