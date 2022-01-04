@@ -75,7 +75,7 @@ const options = supportedStatus.map(x => createTabNav(x, labelByStatus[x as Supp
 function loadOrders(api: OrderControllerApi, maker: string, status: OrderStatus, continuation: string | undefined) {
   return api.getSellOrdersByMakerAndByStatus({
     maker: maker,
-    platform: Platform.RARIBLE,
+    platform: Platform.OPEN_SEA,
     status: [status],
     continuation,
   })
