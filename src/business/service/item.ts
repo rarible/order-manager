@@ -1,26 +1,24 @@
 import type { Observable } from "rxjs"
 import type { Wrapped } from "@rixio/wrapped"
-import type { AssetType, NftCollection, NftItem, Order } from "@rarible/ethereum-api-client"
+import type { AssetType, NftCollection, NftItem } from "@rarible/ethereum-api-client"
 import type { KeyCache } from "@rixio/cache"
 import { rxObject } from "@rixio/react"
 
 type OW<T> = Observable<Wrapped<T>>
-type OrderData = {
-  order: Order
+type ItemData = {
   item: NftItem
   collection: NftCollection
 }
 
-class OrderService {
+export class ItemService {
   constructor(
     private readonly itemCache: KeyCache<string, NftItem>,
     private readonly collectionCache: KeyCache<string, NftCollection>,
   ) {}
 
-  getItemData(order: Order): OW<OrderData> {
-    const id = getNftItemId(order.make.assetType)
-    return rxObject<OrderData>({
-      order,
+  getItemData(assetType: AssetType): OW<ItemData> {
+    const id = getNftItemId(assetType)
+    return rxObject<ItemData>({
       item: this.itemCache.single(`${id.contract}:${id.tokenId}`),
       collection: this.collectionCache.single(id.contract),
     })

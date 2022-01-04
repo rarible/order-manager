@@ -25,8 +25,8 @@ function renderWrapper(content: React.ReactElement) {
     <Table>
       <thead>
         <th scope="col">#</th>
-        <th scope="col">Take</th>
         <th scope="col">Make</th>
+        <th scope="col">Take</th>
         <th scope="col">Actions</th>
       </thead>
       <tbody>{content}</tbody>

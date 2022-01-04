@@ -1,11 +1,21 @@
-import type { Asset, AssetType, Erc1155AssetType, Erc721AssetType, Order } from "@rarible/ethereum-api-client"
+import type {
+  Asset,
+  AssetType,
+  Erc1155AssetType,
+  Erc1155LazyAssetType,
+  Erc721AssetType,
+  Erc721LazyAssetType,
+  Order,
+} from "@rarible/ethereum-api-client"
 import { toBn } from "@rarible/utils"
 import React from "react"
 import styled from "styled-components"
+import { useRx } from "@rixio/react"
 import { formatDecimal } from "../../../utils/format-decimal"
-import { getAssetLinkOpensea, getAssetLinkRarible } from "../../../utils/get-asset-link"
+import { getAssetLinkRarible } from "../../../utils/get-asset-link"
 import { Link } from "../link"
 import { Touchable } from "../touchable"
+import { useAppContext } from "../../../business/context"
 
 export type OrderRowProps = {
   order: Order
@@ -18,10 +28,10 @@ export function OrderRow({ order, index, onCancel }: OrderRowProps) {
     <tr>
       <td>{index + 1}</td>
       <td>
-        <AssetEntry asset={order.take} />
+        <NftAssetEntry asset={order.make} />
       </td>
       <td>
-        <AssetEntry asset={order.make} />
+        <AssetEntry asset={order.take} />
       </td>
       <td>
         <Menu>
@@ -29,28 +39,6 @@ export function OrderRow({ order, index, onCancel }: OrderRowProps) {
             <li>
               <Button onClick={() => onCancel(order)}>Cancel</Button>
             </li>
-          )}
-          {isEthereumAsset(order.make.assetType) && (
-            <React.Fragment>
-              <Link
-                href={getAssetLinkRarible(order.make.assetType.contract, order.make.assetType.tokenId)}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <li>
-                  <Button>Rarible</Button>
-                </li>
-              </Link>
-              <Link
-                href={getAssetLinkOpensea(order.make.assetType.contract, order.make.assetType.tokenId)}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <li>
-                  <Button>Opensea</Button>
-                </li>
-              </Link>
-            </React.Fragment>
           )}
         </Menu>
       </td>
@@ -71,6 +59,44 @@ const Button = styled(Touchable)`
   color: ${p => p.theme.colors.primary};
 `
 
+type NftAssetEntryProps = {
+  asset: Asset
+}
+
+function NftAssetEntry({ asset }: NftAssetEntryProps) {
+  const { itemService } = useAppContext()
+  const itemData = useRx(itemService.getItemData(asset.assetType), [asset.assetType])
+
+  return (
+    <div>
+      <ul>
+        <li>
+          {isNftAsset(asset.assetType) && (
+            <Link
+              href={getAssetLinkRarible(asset.assetType.contract, asset.assetType.tokenId)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <li>
+                <Button>
+                  {itemData.status === "fulfilled"
+                    ? `${itemData.value.collection.name} - ${itemData.value.item.meta?.name}`
+                    : itemData.status}
+                </Button>
+              </li>
+            </Link>
+          )}
+        </li>
+        {asset.valueDecimal ? (
+          <li>Value: {formatDecimal(toBn(asset.valueDecimal.toString()).toNumber())}</li>
+        ) : (
+          <li>Value: None</li>
+        )}
+      </ul>
+    </div>
+  )
+}
+
 type AssetEntryProps = {
   asset: Asset
 }
@@ -80,7 +106,7 @@ function AssetEntry({ asset }: AssetEntryProps) {
     <div>
       <ul>
         <li>Type: {asset.assetType.assetClass}</li>
-        {isEthereumAsset(asset.assetType) ? (
+        {isNftAsset(asset.assetType) ? (
           <React.Fragment>
             <li>Contract: {asset.assetType.contract}</li>
             <li>Id: {asset.assetType.tokenId}</li>
@@ -96,6 +122,13 @@ function AssetEntry({ asset }: AssetEntryProps) {
   )
 }
 
-function isEthereumAsset(x: AssetType): x is Erc721AssetType | Erc1155AssetType {
-  return x.assetClass === "ERC721" || x.assetClass === "ERC1155"
+function isNftAsset(
+  x: AssetType,
+): x is Erc721AssetType | Erc1155AssetType | Erc721LazyAssetType | Erc1155LazyAssetType {
+  return (
+    x.assetClass === "ERC721" ||
+    x.assetClass === "ERC1155" ||
+    x.assetClass === "ERC721_LAZY" ||
+    x.assetClass === "ERC1155_LAZY"
+  )
 }
