@@ -1,7 +1,7 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import "./theming/styled-hook"
-import ReactGA from "react-ga"
+import ReactGA from "react-ga4"
 import { IndexPage } from "./components/pages"
 import { GlobalStyles } from "./global-styles"
 import { connector } from "./business/blockchain"
