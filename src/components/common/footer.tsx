@@ -7,7 +7,8 @@ export function Footer() {
     <Wrapper as="footer">
       <span>
         Made with love by <ExternalLink href="https://rarible.com">Rarible</ExternalLink> team using{" "}
-        <ExternalLink href="https://rarible.org">Rarible Protocol</ExternalLink>
+        <ExternalLink href="https://rarible.org">Rarible Protocol</ExternalLink>. Source code is available on{" "}
+        <ExternalLink href="https://github.com/rarible/order-manager">GitHub</ExternalLink>.
       </span>
     </Wrapper>
   )
