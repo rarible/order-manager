@@ -1809,19 +1809,19 @@
     eth-rpc-errors "^4.0.3"
     exponential-backoff "^3.1.0"
 
-"@rixio/atom@^0.3.9", "@rixio/atom@~0.3.9":
-  version "0.3.9"
-  resolved "https://registry.yarnpkg.com/@rixio/atom/-/atom-0.3.9.tgz#82525e67d569fea57587c2c65f176ebbc2ba02f1"
-  integrity sha512-xr4JSm2rwTasO/klGan3a0+rJM33AvtHVUR4inRUM8kZZ9SzXnJDV8t0jGnG2PpvFk8Igzy6R5oY5V5MxVWwCQ==
+"@rixio/atom@^0.3.10":
+  version "0.3.10"
+  resolved "https://registry.yarnpkg.com/@rixio/atom/-/atom-0.3.10.tgz#e25d43d0a5ef2daa53f8d34b0cef044f096cbc48"
+  integrity sha512-CFsGmLx0gNfiB+v/u+m40EwQauJv2ZgQFpitTKlYJgfThnogjsOpSrWIG/8NPhblI/dB4HEqHRjE8upEyT/DDw==
   dependencies:
     "@rixio/lens" "^0.5.0"
 
-"@rixio/cache@^0.2.3":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@rixio/cache/-/cache-0.2.3.tgz#c2b2bcd7b756ab769b1205a2e65217866f51769b"
-  integrity sha512-zgf7AV776tatH8mTC8/Rff6NSqZ9tmvAmZwMAp0nnsTsrXZ8gcwH1Iuy/6w3lurXBKCc0YtLUjyEUBYFFhGidA==
+"@rixio/cache@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@rixio/cache/-/cache-0.3.0.tgz#657a1f50de93fb94f14d3086ddf45d44956ebec0"
+  integrity sha512-eqB29PmTNtn05N8IwzelG144SSkddIlgcrJG8wTSsURR75aSV0veEkOlT7/eJ4shfhiYrIj00xQWKHBRK+O2Sg==
   dependencies:
-    "@rixio/atom" "^0.3.9"
+    "@rixio/atom" "^0.3.10"
     "@rixio/wrapped" "^0.2.8"
 
 "@rixio/lens@^0.5.0":
@@ -1829,10 +1829,10 @@
   resolved "https://registry.yarnpkg.com/@rixio/lens/-/lens-0.5.0.tgz#fa3ff29880a4c1af4de65d27678f24ef6faba833"
   integrity sha512-chVt4+LsC8RQzu2NGux9VeshT302LCnvawC033otZMUuhia9lsbY080dmM8W0WjWTbkx/cShX8TDIXfrRE4WtA==
 
-"@rixio/react@~0.9.6":
-  version "0.9.6"
-  resolved "https://registry.yarnpkg.com/@rixio/react/-/react-0.9.6.tgz#74faf8062aa494b05a99571a8ac86fcaf01ba695"
-  integrity sha512-zBsPmCHUjpemdP65+J8fVjrV3+8SxlYo+FacrBShpJ7M02MN4oRfEHBxAGA/yGjGBBRIXNWTjWzt8DEt/+WGZQ==
+"@rixio/react@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@rixio/react/-/react-0.10.0.tgz#34a3411120ae0006c8a78f89291b303acfc18e1e"
+  integrity sha512-8cy91K0jOsz957xforPLFU3Xnch4RETHjYqDtVv/hORKrUCSkPCofUamn82sX+v7wl5nvRQc/S1ngWBfJFiblg==
   dependencies:
     "@rixio/lens" "^0.5.0"
     "@rixio/wrapped" "^0.2.8"
