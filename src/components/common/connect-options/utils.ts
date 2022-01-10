@@ -1,5 +1,5 @@
-import type { ProviderOption } from "@rarible/sdk-wallet-connector"
-import { DappType } from "@rarible/sdk-wallet-connector/build/connectors/ethereum/injected"
+import { DappType } from "@rarible/connector"
+import type { ProviderOption } from "@rarible/connector"
 import type { Connection, SupportedConnectionType } from "../../../business/blockchain/domain"
 import { ethereumIcon } from "./assets/ethereum"
 import { metamaskIcon } from "./assets/metamask"

@@ -1,5 +1,5 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import type { ConnectionState, DappType, IConnector, StateConnected } from "@rarible/sdk-wallet-connector"
+import type { ConnectionState, DappType, IConnector, StateConnected } from "@rarible/connector"
 
 export type Connection = {
   type: "connected" | "invalid-chain-id"

@@ -1,21 +1,22 @@
 import type { AssetType, NftCollection, NftItem } from "@rarible/ethereum-api-client"
-import type { KeyCache } from "@rixio/cache"
-import { rxObject } from "@rixio/react"
-import type { OW } from "../domain"
+import type { KeyMemo } from "@rixio/cache"
+import type { Observable } from "rxjs"
+import { combineLatest } from "rxjs"
+import { map } from "rxjs/operators"
 import type { ItemData } from "./domain"
 
 export class ItemService {
   constructor(
-    private readonly itemCache: KeyCache<string, NftItem>,
-    private readonly collectionCache: KeyCache<string, NftCollection>,
+    private readonly itemCache: KeyMemo<string, NftItem>,
+    private readonly collectionCache: KeyMemo<string, NftCollection>,
   ) {}
 
-  getItemData(assetType: AssetType): OW<ItemData> {
+  getItemData(assetType: AssetType): Observable<ItemData> {
     const id = getNftItemId(assetType)
-    return rxObject<ItemData>({
-      item: this.itemCache.single(`${id.contract}:${id.tokenId}`),
-      collection: this.collectionCache.single(id.contract),
-    })
+    return combineLatest([
+      this.itemCache.single(`${id.contract}:${id.tokenId}`),
+      this.collectionCache.single(id.contract),
+    ]).pipe(map(([item, collection]) => ({ item, collection })))
   }
 }
 
