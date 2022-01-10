@@ -1,14 +1,15 @@
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import type { AbstractConnectionProvider, ConnectionProvider } from "@rarible/sdk-wallet-connector/build/provider"
-import type { EthereumProviderConnectionResult } from "@rarible/sdk-wallet-connector/build/connectors/ethereum/domain"
-import { InjectedWeb3ConnectionProvider } from "@rarible/sdk-wallet-connector/build/connectors/ethereum/injected"
-import { MEWConnectionProvider } from "@rarible/sdk-wallet-connector/build/connectors/ethereum/mew"
-import { TorusConnectionProvider } from "@rarible/sdk-wallet-connector/build/connectors/ethereum/torus"
-import { WalletLinkConnectionProvider } from "@rarible/sdk-wallet-connector/build/connectors/ethereum/walletllink"
-import { Connector } from "@rarible/sdk-wallet-connector/build/connector"
-import { raribleStorageManager } from "../storage"
+import { Connector, DefaultConnectionStateProvider, InjectedWeb3ConnectionProvider } from "@rarible/connector"
+import type {
+  EthereumProviderConnectionResult,
+  AbstractConnectionProvider,
+  ConnectionProvider,
+} from "@rarible/connector"
+import { MEWConnectionProvider } from "@rarible/connector-mew"
+import { TorusConnectionProvider } from "@rarible/connector-torus"
+import { WalletLinkConnectionProvider } from "@rarible/connector-walletlink"
 import { currentChainId } from "../config"
 import type { Connection, RaribleConnector, SupportedChain } from "./domain"
 import { chainIdToEnv } from "./utils"
@@ -87,12 +88,5 @@ const walletlink = mapToSdk(
 // const fortmatic = mapToSdk(new FortmaticConnectionProvider({ apiKey: "FORTMATIC_API_KEY" }))
 // const portis = mapToSdk(new PortisConnectionProvider({ apiKey: "PORTIS_API_KEY", network: "rinkeby" }))
 
-const state$ = raribleStorageManager.getValue("CONNECTOR_STATE", undefined)
-
-export const connector: RaribleConnector = Connector.create(injected, {
-  getValue: async () => state$.get(),
-  setValue: async value => state$.set(value),
-})
-  .add(torus)
-  .add(walletlink)
-  .add(mew)
+const state = new DefaultConnectionStateProvider("order-checker:CONNECTOR_STATE")
+export const connector: RaribleConnector = Connector.create(injected, state).add(torus).add(walletlink).add(mew)

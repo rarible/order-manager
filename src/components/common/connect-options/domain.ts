@@ -1,4 +1,4 @@
-import type { ProviderOption } from "@rarible/sdk-wallet-connector"
+import type { ProviderOption } from "@rarible/connector"
 import type { Connection, SupportedConnectionType } from "../../../business/blockchain/domain"
 
 export type ConnectOption = {
