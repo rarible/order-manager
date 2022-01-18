@@ -89,8 +89,9 @@ function loadOrders(
       continuation,
     })
   }
-  return state.connection.sdk.apis.order.getOrderBidsByMaker({
+  return state.connection.sdk.apis.order.getOrderBidsByMakerAndByStatus({
     maker: state.connection.address,
+    status: [status],
     continuation,
   })
 }
