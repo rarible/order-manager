@@ -17,28 +17,33 @@ export function StatusBar({ state }: StatusBarProps) {
     return (
       <div>
         <CurrentAddress address={state.connection.address} />
-        <Description>
-          You're connected to {getChainLabel(state.connection.chainId)}{" "}
-          {state.disconnect && <DisconnectButton onClick={state.disconnect}>disconnect</DisconnectButton>}
-        </Description>
+        <Delimiter />
+        {getChainLabel(state.connection.chainId).toLowerCase()}
+        {state.disconnect && (
+          <>
+            <Delimiter />
+            <DisconnectButton onClick={state.disconnect}>disconnect</DisconnectButton>
+          </>
+        )}
       </div>
     )
   }
   return null
 }
 
-const Description = styled.span`
-  display: block;
-  font-size: 14px;
+function Delimiter() {
+  return <DelimiterText> | </DelimiterText>
+}
+
+const DelimiterText = styled.span`
+  color: ${p => p.theme.colors.line};
 `
 
-const CurrentAddress = styled(Address)`
-  font-weight: bold;
-  display: block;
-`
+const CurrentAddress = styled(Address)``
 
 const DisconnectButton = styled(Touchable)`
   color: ${p => p.theme.colors.primary};
+  font-size: 16px;
   &:hover,
   &:active,
   &:focus {

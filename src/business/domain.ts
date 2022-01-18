@@ -8,3 +8,12 @@ export type Option<K = string, T extends object = {}> = {
 }
 
 export type OW<T> = Observable<Wrapped<T>>
+
+export enum OrderTypeEnum {
+  SELL = "sell",
+  BID = "bid",
+}
+
+export function isKnownOrderType(x: string): x is OrderTypeEnum {
+  return Object.values(OrderTypeEnum).includes(x as OrderTypeEnum)
+}

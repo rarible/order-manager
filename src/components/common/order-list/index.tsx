@@ -32,6 +32,7 @@ function renderWrapper(content: React.ReactElement) {
       <thead>
         <tr>
           <th scope="col">#</th>
+          <th scope="col">Platform</th>
           <th scope="col">Make</th>
           <th scope="col">Take</th>
           <th scope="col">Actions</th>
@@ -55,13 +56,17 @@ const Table = styled.table`
     min-width: 40px;
   }
 
+  th:nth-child(2) {
+    min-width: 85px;
+  }
+
   thead {
     border-bottom: 2px solid ${p => p.theme.colors.sub};
   }
 
   td,
   th {
-    padding: 12px 0;
+    padding: 12px 12px;
   }
 
   tr {

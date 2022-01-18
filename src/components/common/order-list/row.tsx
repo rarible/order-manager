@@ -7,6 +7,7 @@ import type {
   Erc721AssetType,
   Erc721LazyAssetType,
   Order,
+  OrderData,
 } from "@rarible/ethereum-api-client"
 import { toBn } from "@rarible/utils"
 import { useMemo } from "react"
@@ -31,6 +32,7 @@ export function OrderRow({ order, index, onCancel }: OrderRowProps) {
   return (
     <tr>
       <td>{index + 1}</td>
+      <td>{dataToPlatform(order.data)}</td>
       <td>
         <AssetEntry asset={order.make} />
       </td>
@@ -48,6 +50,12 @@ export function OrderRow({ order, index, onCancel }: OrderRowProps) {
       </td>
     </tr>
   )
+}
+
+function dataToPlatform(data: OrderData): string {
+  if (data.dataType === "OPEN_SEA_V1_DATA_V1") return "OpenSea"
+  if (data.dataType === "CRYPTO_PUNKS_DATA") return "CryptoPunks"
+  return "Rarible"
 }
 
 type AssetEntryProps = {
@@ -101,7 +109,7 @@ function NftAssetEntry({ asset, valueDecimal }: NftAssetEntryProps) {
 }
 
 const NftProps = styled.ul`
-  max-width: 460px;
+  max-width: 420px;
 `
 
 const Title = styled.span`

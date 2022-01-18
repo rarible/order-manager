@@ -1,30 +1,34 @@
 import type { Order } from "@rarible/ethereum-api-client"
-import { OrderStatus, Platform } from "@rarible/ethereum-api-client"
+import { OrderStatus } from "@rarible/ethereum-api-client"
 import styled from "styled-components"
 import { Atom } from "@rixio/atom"
-import { useCallback, useMemo, useState } from "react"
+import { useCallback, useMemo } from "react"
 import { useAtom } from "@rixio/react"
-import { TabNav } from "../common/tab-nav"
-import { createTabNav } from "../common/tab-nav/utils"
-import type { ListResponse } from "../common/list"
-import { OrderList } from "../common/order-list"
-import { useConnectionContext } from "../../business/context"
-import type { RaribleConnectedState } from "../../business/blockchain/domain"
+import { TabNav } from "../../common/tab-nav"
+import { createTabNav } from "../../common/tab-nav/utils"
+import type { ListResponse } from "../../common/list"
+import { OrderList } from "../../common/order-list"
+import { useConnectionContext } from "../../../business/context"
+import type { RaribleConnectedState } from "../../../business/blockchain/domain"
+import { OrderTypeEnum } from "../../../business/domain"
 
-export function OrdersPage() {
+export type OrdersPageProps = {
+  type: OrderTypeEnum
+}
+
+export function OrdersPage({ type }: OrdersPageProps) {
   const { state } = useConnectionContext()
-  const [tab$] = useState(() => Atom.create<OrderStatus>(OrderStatus.INACTIVE))
-  const status = useAtom(tab$)
+  const status = useAtom(status$)
 
   const loadMore = useCallback(
     async (continuation: string | undefined) => {
-      const x = await loadOrders(state, status, continuation)
+      const x = await loadOrders(state, type, status, continuation)
       return {
         data: x.orders,
         continuation: x.continuation,
       } as ListResponse<Order>
     },
-    [state, status],
+    [state, type, status],
   )
 
   const handleCancel = useMemo(() => {
@@ -36,7 +40,7 @@ export function OrdersPage() {
 
   return (
     <Wrapper>
-      <TabNav tabs={options} current$={tab$} />
+      <TabNav tabs={statusOptions} current$={status$} />
       <ContentWrapper>
         <OrderList onCancel={handleCancel} key={status} onLoadMore={loadMore} />
       </ContentWrapper>
@@ -69,13 +73,24 @@ const labelByStatus: Record<SupportedStatus, string> = {
   [OrderStatus.CANCELLED]: "Cancelled",
 }
 
-const options = supportedStatus.map(x => createTabNav(x, labelByStatus[x as SupportedStatus]))
+const statusOptions = supportedStatus.map(x => createTabNav(x, labelByStatus[x as SupportedStatus]))
+const status$ = Atom.create<OrderStatus>(OrderStatus.INACTIVE)
 
-function loadOrders(state: RaribleConnectedState, status: OrderStatus, continuation: string | undefined) {
-  return state.connection.sdk.apis.order.getSellOrdersByMakerAndByStatus({
+function loadOrders(
+  state: RaribleConnectedState,
+  type: OrderTypeEnum,
+  status: OrderStatus,
+  continuation: string | undefined,
+) {
+  if (type === OrderTypeEnum.SELL) {
+    return state.connection.sdk.apis.order.getSellOrdersByMakerAndByStatus({
+      maker: state.connection.address,
+      status: [status],
+      continuation,
+    })
+  }
+  return state.connection.sdk.apis.order.getOrderBidsByMaker({
     maker: state.connection.address,
-    platform: Platform.OPEN_SEA,
-    status: [status],
     continuation,
   })
 }

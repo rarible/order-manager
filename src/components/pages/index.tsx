@@ -5,11 +5,10 @@ import { Container } from "../common/container"
 import { Footer } from "../common/footer"
 import { FullHeight } from "../common/full-height"
 import { Header } from "../common/header"
-import { ConnectionProvider } from "../../business/context"
 import { ActivityIndicator } from "../common/activity-indicator"
 import { InvalidChain } from "../common/invalid-chain"
 import { ConnectPage } from "./connect"
-import { OrdersPage } from "./orders"
+import { AppPage } from "./app"
 
 export type IndexPageProps = {
   connector: RaribleConnector
@@ -59,9 +58,5 @@ function Content({ connector, state }: ContentProps) {
     return <InvalidChain id={state.connection.requiredChainId} />
   }
 
-  return (
-    <ConnectionProvider state={state}>
-      <OrdersPage />
-    </ConnectionProvider>
-  )
+  return <AppPage state={state} />
 }
